@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="../../static/css/login.css">
+{% endblock %}
+
+{% block body %}
+
+  <form class="form-signin box" method="POST">
+              
+    {% csrf_token %}
+
+        <img src="{% static 'images/Logo.png' %}" alt="logo">
+
+        <!-- {% if form.errors %}            
+
+        <h4 class='form-errors' style="color: aliceblue;">{{ form.errors }}</h4>
+
+        {% endif %}  -->
+    
+    
+        {% for field in form %}
+
+        {% if forloop.counter == 1 or forloop.counter == 2 %}
+
+        <input type="text" class="form-control" style="font-size: large;" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" placeholder="{{ field.html_name }}" onfocus="this.placeholder = ''" onblur="this.placeholder = '{{ field.html_name }}'"/> 
+        <h4 class='form-errors' style="color: aliceblue;">{{ field.errors }}</h4>
+        
+        {% endif %}
+
+
+        {% if forloop.counter == 3 %}
+
+        <input type="password" class="form-control" style="font-size: large;" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" placeholder="password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'password'"/> 
+        
+        <h4 class='form-errors' style="color: aliceblue;">{{ field.errors }}</h4>
+        {% elif forloop.counter == 4 %}
+
+        <input type="password" class="form-control" style="font-size: large;" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" placeholder="confirm password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'confirm password'"/> 
+        
+        <h4 class='form-errors' style="color: aliceblue;">{{ field.errors }}</h4>
+        {% endif %}
+
+        </br>
+
+
+
+        {% endfor %}
+        
+        
+
+
+        
+        <input style="font-size: large;" type="submit" name="" value="Sign Up"><br>
+        
+    <!-- <div class="form-group">
+
+        <button
+
+        class="btn btn-lg btn-primary btn-block text-uppercase"
+
+        type="submit"
+
+        >Sign Up</button><br/><br />
+
+    </div> -->
+  <small><p style="color: aliceblue;"class="text-center">
+    Already Registered?
+    <a href="{% url 'users:login' %}"><b style="color: aliceblue;">Login Now!</b></a>
+  </p></small>
+  </form>
+
+  
+  {% comment original %}
+    <br/>
+    <div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-9 col-lg-7 mx-auto">
+        <div class="card card-signin my-5">
+            <div class="card-body">
+            <h5 class="card-title text-center"><b>Register</b></h5>
+            <form class="form-signin" method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                <br />
+                {{ form.as_p }}
+                </fieldset>
+                <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign Up</button><br/><br />
+                </div>
+                <small><p class="text-center"> Already Registered!
+                  <a href="{% url 'users:login' %}"><b>Login Now!</b></a>
+                </p></small>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+  {% endcomment %}
+{% endblock %}

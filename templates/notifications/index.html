@@ -1,0 +1,14 @@
+{% for ntf in notifs %}
+
+  <div style="border: 1px solid black;">
+    <p>{{ ntf.sender }} </p>
+    <p>{{ ntf.notification_type }} </p>
+    <p>{{ ntf.notification_text }} </p>
+    {% if ntf.notification_type == "ME" %}
+      <a href="{{ ntf.room.get_absolute_url }}">Reply here</a>
+    {% elif ntf.notification_type == "CO" or ntf.notification_type == "SH" or ntf.notification_type == "LI" or ntf.notification_type == "CL" %}
+      <a href="{{ ntf.post.get_absolute_url }}">View Here</a>
+    {% endif %}
+  </div>
+
+{% endfor %}

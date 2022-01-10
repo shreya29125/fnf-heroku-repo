@@ -1,0 +1,20 @@
+{% if post.post_type == 'VI' %}
+    <img class="Profile_Img" src="{{ post.thumbnail.url }}">
+    <video class="vid" src="{{ post.file.url }}" controls>
+        Your browser does not support the video tag.
+    </video>
+{% elif post.post_type == 'AU' %}
+  <img class="Profile_Img" src="{{ post.thumbnail.url }}">
+  <audio controls class="aud">
+    <source src="{{ post.file.url }}" type="audio/mpeg">
+    Your browser does not support the audio tag.
+  </audio>
+{% elif post.post_type == 'IM' %}
+  <img class="Profile_Img" src="{{ post.file.url }}">
+{% elif post.post_type == 'SH' %}
+  <div class="shared-container" style="padding:30px; border: 1px solid black;">
+    {% include 'posts/profile_post_partial.html' with post=post.parent_post %}
+  </div>
+{% else %}
+  <p>Invalid Post. Contact Admin for help</p>
+{% endif %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %} 
+{% block body %}
+<form
+  class="form-inline my-2 my-lg-0 ml-5"
+  action="{% url 'users:search_users' %}"
+  method="get">
+  <input name="q" type="text" placeholder="Search users.." />
+  <button class="btn btn-success my-2 my-sm-0 ml-4" type="submit">
+    Search
+  </button>
+</form>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      {% if following %}
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          {% for user_p in following %}
+          <a href="{{ user_p.get_absolute_url }}"
+            ><img
+              src="{{ user_p.image.url }}"
+              class="rounded mr-2"
+              width="40"
+              height="40"
+              alt=""
+          /></a>
+          <a class="text-dark" href="{{ user_p.get_absolute_url }}"><b>{{ user_p }}</b></a>
+          <small><a
+              class="btn btn-danger float-right"
+              href="{% url 'users:delete_following' user_p.slug %}">Unfollow</a></small>
+          <br /><br />
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <h5>
+        <i
+          >You don't follow anyone! Follow more!
+          <a href="{% url 'users:users_list' %}">Here!</a></i>
+      </h5>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

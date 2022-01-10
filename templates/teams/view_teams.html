@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <hr>
+  {% for team in teams %}
+    <div>
+      <p>
+        {{ team.team_name }}
+      </p>
+      <p>
+        <a href="{% url 'chat:room' team.room.room_id  %}">Link to Hotline</a>
+        <a href="{% url 'teams:view' %}?team_id={{ team.room.room_id }}">Link to View Members</a>
+      </p>
+    </div>
+    <hr>
+  {% endfor %}
+
+  <h3>Requests Recieved for Teams</h3>
+  <ul>
+    {% for request in requests_recieved %}
+      <li>
+        <p>{{ request.from_team.team_name }} <a class="accept-invite" data-teamid="{{ request.from_team.room.room_id }}" href="">Accept Invite</a></p>
+        <p>{{ request.from_team.team_description }}</p>
+
+      </li>
+    {% endfor %}
+  </ul>
+
+  <script>
+     $("body").on('click', '.accept-invite', function (e) {
+          e.preventDefault();
+          var team_id = $(this).attr("data-teamid");
+          $.ajax({
+              type: "GET",
+              url: "{% url 'teams:accept_invite' %}",
+              data: {
+                  'team_id' : team_id,
+              },   
+              success: function (response) {
+                  window.alert("Accepted!");
+              },
+              error: function (response) {
+                  alert("Error in Liking the Post :\n" + response.error);
+              }
+          })
+      })
+  </script>
+{% endblock %}

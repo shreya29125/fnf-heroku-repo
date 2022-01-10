@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <h3>Team Name </h3>
+  <p<h4>{{ team.team_name }}</h4></p>
+  <h3>Team Members </h3>
+  {% for member in team.team_members.all %}
+    <ul>
+        <p><a href="{% url 'users:profile_view' member.profile.slug %}">{{ member.username }}</a></p>
+    </ul>
+  {% endfor %}
+
+  <h3>Requests Sent</h3>
+  {% for request in team.requests_sent.all %}
+    <ul id="req-sent-{{ member.profile.slug }}">
+      <p><a href="{% url 'users:profile_view' request.to_user.profile.slug %}">{{ request.to_user.username }}</a> <a clas='cancel-request' href="" data-userslg="{{ member.profile.slug }}">Cancel Request</a></p>
+    </ul>
+  {% endfor %}
+
+  <form id="send-request-form">
+    {% csrf_token %}
+    <input name="username" type="text" required>
+    <input type="submit" class="btn btn-primary" value="Send Reqeust" />
+  </form>
+
+  <a href="{% url 'teams:leave_team' team.room.room_id %}">Leave Team</a>
+
+  <script>
+
+    $("#send-request-form").submit(function (e) {
+      e.preventDefault();
+      var serializedData = $(this).serialize();
+      $.ajax({
+          type: 'POST',
+          url: "{% url 'teams:send_invite' team.room.room_id %}",
+          data: serializedData,
+          success: function (response) {
+              $("#comment-form").trigger('reset');
+              var instance = JSON.parse(response["instance"]);
+              var username = response["username"];
+              var comment_id = response["comment_id"];
+              var fields = instance[0]["fields"];
+              $(".all-comments").prepend(
+                  `<div class="comment" id="comment-{{forloop.counter}}">
+                      ${username||""}<br>
+                      <p>&emsp; ${fields["content"]||""} &emsp; <a href="{% url 'posts:delete_comment' %}?comment_id=${comment_id}">Delete</a></p>
+                  </div>
+                  `
+              )
+          },
+          error: function (response) {
+              // alert the error if any error occured
+              alert(response["responseJSON"]["error"]);
+          }
+      })
+    })
+
+    $("body").on('click', '.cancel-request', function (e) {
+          e.preventDefault();
+          var user_slug = $(this).attr("data-userslg");
+          $.ajax({
+              type: "GET",
+              url: "{% url 'teams:cancel_invite' team.room.room_id %}",
+              data: {
+                  'slug' : user_slug,
+              },   
+              success: function (response) {
+                  $(".req-sent-"+user_slug).remove();
+              },
+              error: function (response) {
+                  alert("Error in Liking the Post :\n" + response.error);
+              }
+          })
+      })
+
+  </script>
+
+{% endblock %}

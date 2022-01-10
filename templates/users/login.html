@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="../../static/css/login.css">
+{% endblock %}
+
+{% block body %}
+
+<form class="form-signin box" method="POST">
+  {% csrf_token %}
+  
+  <img src="{% static 'images/Logo.png' %}" alt="logo">
+
+  {% if form.non_field_errors %}            
+
+  <h4 class='form-errors' style="color: aliceblue;">{{ form.non_field_errors }}</h4>
+
+  {% endif %} 
+
+  {% for field in form %}
+  
+  {% if field.html_name == "password" %}
+  
+    <input class="form-control" style="font-size: large;" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" placeholder="{{ field.html_name }}" type="password" onfocus="this.placeholder = ''" onblur="this.placeholder = '{{ field.html_name }}'"/> 
+  
+  {% else %}
+
+    <input class="form-control" style="font-size: large;" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" placeholder="{{ field.html_name }}" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = '{{ field.html_name }}'"/> 
+  
+  {% endif %}
+  
+
+<br/>
+{% endfor %}
+
+<input type="checkbox" id="Remember" name="remember" value="yes">
+<label for="Remember" style="color: aliceblue;"> Remember Me</label>
+<input style="font-size: large;" type="submit" name="" value="Login"><br>
+<a href = "{% url 'password_reset' %}" style="font-size: medium;"><u>Forgot Password</u></a>
+
+  <small
+    ><p style="color: aliceblue;" class="text-center">
+      Not registered yet!
+      <a href="{% url 'users:signup' %}"><b style="color: aliceblue;">Register Now!</b></a>
+    </p></small
+  >
+</form>
+
+{% endblock %}

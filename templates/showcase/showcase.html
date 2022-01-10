@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <!-- Only using this styling for better viewing purposes, feel free to remove later -->
+  <style>
+      .post-container{
+          padding: 60px;
+      }
+  </style>
+
+{% endblock head %}
+
+{% block body %}
+
+  <div class='post-container'>
+      
+      {% include 'posts/post_partial.html' %}
+
+      <div class="features-section">
+          <a href="{% url 'posts:share_post' %}?post-slug={{post.slug}}">Share Post(on Feed)</a>
+          {% if liked == "False" %}
+              <a class="likebutton" id="btn-{{post.slug}}" href="#" data-postslg="{{ post.slug }}">Like</a>
+          {% else %}
+              <a class="unlikebutton" id="btn-{{post.slug}}" href="#" data-postslg="{{ post.slug }}">Unlike</a>
+          {% endif %}
+          <p>Share To </p> <br>
+          {% for profile in user.profile.following.all %}
+            <a class="share-post-chat"
+            href="#" data-reciever="{{ profile.slug }}" data-post="{{ post.slug }}">
+              {{ profile.user.username}}
+            </a>
+          {% endfor %}
+          <div class = "all-comments">
+            <h4>Comments</h4>
+              {% for comment in comments_liked %}
+                  <div class="comment" id="comment-{{forloop.counter}}">
+                      {{ comment.user_commented.username }} <br>
+                      <p>&emsp; {{ comment.content }} 
+                          {% if reqeust.user == comment.user_commented %}
+                              &emsp; <a href="{% url 'posts:delete_comment' %}?comment_id={{comment.id}}">Delete</a>
+                          {% endif %}
+                              &emsp; <a class="commentunlikebutton" id="combtn-{{comment.id}}" href='#' data-comid="{{comment.id}}">Unlike</a></p>
+                  </div> <br>
+              {% endfor %}
+              {% for comment in comments_not_liked %}
+                  <div class="comment" id="comment-{{forloop.counter}}">
+                      {{ comment.user_commented.username }} <br>
+                      <p>&emsp; {{ comment.content }} 
+                          {% if reqeust.user == comment.user_commented %}
+                              &emsp; <a href="{% url 'posts:delete_comment' %}?comment_id={{comment.id}}">Delete</a>
+                          {% endif %}
+                              &emsp; <a class="commentlikebutton" id="combtn-{{comment.id}}" href='#' data-comid="{{comment.id}}">Like</a></p>
+                  </div> <br>
+              {% endfor %}
+          </div>
+          <div class = "add-comment-form">
+              <form id="comment-form">
+                  {% csrf_token %}
+                  {{ comment_form.as_p }}
+                  <input type="submit" class="btn btn-primary" value="AddComment" />
+              </form>
+          </div>
+      </div>
+  </div>
+
+  <script>
+
+      $("body").on('click', '.likebutton', function (e) {
+          e.preventDefault();
+          var post_slug = $(this).attr("data-postslg");
+          $.ajax({
+              type: "GET",
+              url: "{% url 'posts:like_post' %}",
+              data: {
+                  'slug' : post_slug,
+              },   
+              success: function (response) {
+                  $(".likebutton#btn-"+post_slug).removeClass('likebutton').addClass('unlikebutton').text("Unlike");
+              },
+              error: function (response) {
+                  alert("Error in Liking the Post :\n" + response.error);
+                  console.log(response)
+              }
+          })
+      })
+
+      $("body").on('click', '.unlikebutton',function (e) {
+          e.preventDefault();
+          var post_slug = $(this).attr("data-postslg");
+          $.ajax({
+              type: "GET",
+              url: "{% url 'posts:unlike_post' %}",
+              data: {
+                  'slug' : post_slug,
+              },   
+              success: function (response) {
+                  $(".unlikebutton#btn-"+post_slug).removeClass('unlikebutton').addClass('likebutton').text("Like");
+              },
+              error: function (response) {
+                  alert("Error in Unliking the Post :\n" + response.error);
+              }
+          })
+      })
+
+      $("#comment-form").submit(function (e) {
+          e.preventDefault();
+          var serializedData = $(this).serialize();
+          $.ajax({
+              type: 'POST',
+              url: "{% url 'posts:add_comment' %}",
+              data: serializedData,
+              success: function (response) {
+                  $("#comment-form").trigger('reset');
+                  var instance = JSON.parse(response["instance"]);
+                  var username = response["username"];
+                  var comment_id = response["comment_id"];
+                  var fields = instance[0]["fields"];
+                  $(".all-comments").prepend(
+                      `<div class="comment" id="comment-{{forloop.counter}}">
+                          ${username||""}<br>
+                          <p>&emsp; ${fields["content"]||""} &emsp; <a href="{% url 'posts:delete_comment' %}?comment_id=${comment_id}">Delete</a></p>
+                      </div>
+                      `
+                  )
+              },
+              error: function (response) {
+                  // alert the error if any error occured
+                  alert(response["responseJSON"]["error"]);
+              }
+          })
+      })
+
+      $("body").on('click', '.commentlikebutton', function (e) {
+          e.preventDefault();
+          var comment_id = $(this).attr("data-comid");
+          $.ajax({
+              type: "GET",
+              url: "{% url 'posts:like_comment' %}",
+              data: {
+                  'comment-id' : comment_id,
+              },   
+              success: function (response) {
+                  $(".commentlikebutton#combtn-"+comment_id).removeClass('commentlikebutton').addClass('commentunlikebutton').text("Unlike");
+              },
+              error: function (response) {
+                  console.log(response)
+                  alert("Error in Liking the Post :\n" + response.error);
+              }
+          })
+      })
+
+      $("body").on('click', '.commentunlikebutton', function (e) {
+          e.preventDefault();
+          var comment_id = $(this).attr("data-comid");
+          $.ajax({
+              type: "GET",
+              url: "{% url 'posts:unlike_comment' %}",
+              data: {
+                  'comment-id' : comment_id,
+              },   
+              success: function (response) {
+                  $(".commentunlikebutton#combtn-"+comment_id).removeClass('commentunlikebutton').addClass('commentlikebutton').text("Like");;
+              },
+              error: function (response) {
+                  console.log(response)
+                  alert("Error in Liking the Post :\n" + response.error);
+              }
+          })
+      })
+
+      $("body").on('click', '.share-post-chat', function (e) {
+          e.preventDefault();
+          var reciever = $(this).attr("data-reciever");
+          var post_slug = $(this).attr("data-post");
+          $.ajax({
+              type: "GET",
+              url: "{% url 'posts:share_post_chat' %}",
+              data: {
+                  'reciever' : reciever,
+                  'post-slug' : post_slug,
+              },   
+              success: function (response) {
+                  alert("Success!");
+              },
+              error: function (response) {
+                  console.log(response)
+                  alert("Error in Liking the Post :\n" + response.error);
+              }
+          })
+      })
+
+
+      
+      
+
+  </script>
+{% endblock body %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+{% endblock head%}
+
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+  {% if form.errors %}
+    {% for error in form.errors %}
+        <p>{{ error }}</p>
+    {% endfor %}
+  {% endif %}
+
+  <div class="container col-9" style="margin-top:50px; background-color: white;">
+    <form class="form-signin" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset class="form-group">
+      <br>
+      <div class="form-group">
+        {{ form |crispy }}
+      </div>
+      </fieldset>
+      <button class="btn btn-lg btn-primary" type="submit">Make Post</button>
+      <br/><br/>
+    </form>
+  </div>
+
+{% endblock body %}

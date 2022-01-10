@@ -1,0 +1,244 @@
+{% extends "base.html" %} 
+
+{% load static %} 
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  <script src="{% static 'js/Profile.js' %}"></script>
+{% endblock head %}
+
+{% block body %}
+
+  <div class="grid-container-profile profile-item">
+    <div class="grid-item-profile">
+        <img class='Profile_pic' src='{{ u.profile.image.url }}'>        
+    </div>
+    <div class="grid-item-profile bio-item">
+        <div class='Details'>
+            <button style='color: black'>Details</button>
+        </div>
+        <p class='username'>
+            {{ u.profile.first_name }} {{ u.profile.last_name }}
+        </p>
+        <p class='username' style='color: grey;'>
+            {{ u.username }}
+        </p>
+        <p class='username'> 
+            {{ u.profile.bio }}
+        </p>
+    </div>
+    <div class="grid-item-profile placeholder-item">
+        <img class='Profile_placeholder' src="{% static 'images/Placeholder.png' %}" align='right'>     
+    </div>
+
+    <div class="text-center">
+      {% if not u == request.user %}
+        {% if button_status == 'not_following' %}
+          <small><a
+              class="btn btn-primary"
+              href="{% url 'users:send_follow_request' u.profile.slug %}">Follow</a></small>
+        {% elif button_status == 'follow_request_sent' %}
+          <small><a
+              class="btn btn-warning"
+              href="{% url 'users:cancel_follow_request' u.profile.slug %}">Cancel Follow Request</a></small>
+        {% elif button_status == 'follow_request_received' %}
+          <small ><a
+              class="btn btn-success mr-2"
+              href="{% url 'users:accept_follow_request' u.profile.slug %}">Accept Follow Request</a ></small>
+          <small><a
+              class="btn btn-danger"
+              href="{% url 'users:delete_follow_request' u.profile.slug %}">Reject Request</a></small>
+        {% else %}
+          <small><a
+              class="btn btn-danger"
+              href="{% url 'users:delete_following' u.profile.slug %}">UnFollow</a></small>
+        {% endif %}
+      {% endif %}
+    </div>
+    
+  </div>
+
+  <div class="profile-nav">
+    <button onclick="allposts()"><div class='Living-room profile-nav-item'>
+        <a href="#"><span class="iconify icon-profile" data-icon="bx:bx-home" data-inline="false"></span> <div class='prof-nav-text'>Living Room</div></a>
+    </div></button>
+   <button onclick="video()"><div class='Video profile-nav-item'>
+        <a href="#"><span class="iconify icon-profile" data-icon="bi:camera-video" data-inline="false" ></span><div class='prof-nav-text'>Video</div></a>
+    </div></button>
+    <button onclick="audio()"><div class='Audio profile-nav-item'>
+        <a href="#"><span class="iconify icon-profile" data-icon="fluent:music-note-2-16-regular" data-inline="false" data-width="20px" data-height="20px"></span><div class='prof-nav-text'>Audio</div></a>
+    </div></button>
+    <button onclick="blog()"><div class='Blogs profile-nav-item'>
+        <a href="#"><span class="iconify" data-icon="dashicons:welcome-write-blog" data-inline="false"></span><div class='prof-nav-text'>Blogs</div></a>
+    </div></button>
+    <div class='Tags profile-nav-item'>
+        <a href="#"><span class="iconify" data-icon="ant-design:tags-outlined" data-inline="false"></span> <div class='prof-nav-text'>Your Tags</div></a>
+    </div>
+  </div>
+
+  <div id="all-post" class="profile-content-grid-container">
+
+    {% if not private_acc %}
+  
+        {% for post in posts %} 
+        <div class="profile-grid-item">
+          <a href="{% url 'posts:view_post' post.slug %}">
+            {% include 'posts/profile_post_partial.html' with post=post %}
+          </a> <br>
+        </div>
+        {% endfor %}
+    
+    {% else %}
+      <div>
+        <p>
+          This is a private acc, follow them to see their posts!
+        </p>
+      </div>
+    {% endif %}
+  </div>  
+
+  <div id="audio" class="profile-content-grid-container">
+
+    {% if not private_acc %}
+  
+        {% for post in posts %} 
+        {% if post.post_type == "AU" %}
+        <div class="profile-grid-item">
+          <a href="{% url 'posts:view_post' post.slug %}">
+            {% include 'posts/profile_post_partial.html' with post=post %}
+          </a> <br>
+        </div>
+        {% endif %}
+        {% endfor %}
+    
+    {% else %}
+      <div>
+        <p>
+          This is a private acc, follow them to see their posts!
+        </p>
+      </div>
+    {% endif %}
+  </div>  
+  
+  <div id="video" class="profile-content-grid-container">
+
+    {% if not private_acc %}
+  
+        {% for post in posts %} 
+        {% if post.post_type == "VI" %}
+        <div class="profile-grid-item">
+          <a href="{% url 'posts:view_post' post.slug %}">
+            {% include 'posts/profile_post_partial.html' with post=post %}
+          </a> <br>
+        </div>
+        {% endif %}
+        {% endfor %}
+    
+    {% else %}
+      <div>
+        <p>
+          This is a private acc, follow them to see their posts!
+        </p>
+      </div>
+    {% endif %}
+  </div> 
+  
+  <div id="blogs" class="profile-content-grid-container">
+
+    {% if not private_acc %}
+  
+        {% for blog in blogs %} 
+        <div class="profile-grid-item">
+          <a href="{% url 'can:read_path' id_b=blog.id %}">
+            <img class="Profile_Img post" src="{{ blog.thumb.url }}" alt="{{ blog.title }}">
+            <header>
+                <h3>{{ blog.title }}</h3>
+            </header>
+            </a>
+        </div>
+        {% endfor %}
+    
+    {% else %}
+      <div>
+        <p>
+          This is a private acc, follow them to see their posts!
+        </p>
+      </div>
+    {% endif %}
+  </div>
+
+
+{% comment original %}
+<div class="main-content">
+  <div class="container mt-7">
+    <div class="row">
+      <div class="col-xl-8 m-auto order-xl-2 mb-5 mb-xl-0">
+        <div class="card card-profile shadow">
+          <div class="row justify-content-center">
+            <div class="col-lg-3 order-lg-2">
+              <div class="card-profile-image">
+                <a href="{{ u.profile.image.url }}">
+                  <img
+                    src="{{ u.profile.image.url }}"
+                    class="rounded-circle"
+                    width="160px"
+                    height="160px"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4"
+          ></div>
+          <div class="card-body pt-0 pt-md-4">
+            <div class="row">
+              <div class="col">
+                <div class="card-profile-stats d-flex justify-content-center mt-md-5">
+                  <div>
+                    <span class="heading">{{ follow_count }}</span>
+                    <span class="description">Following</span>
+                    <span class="heading">{{ post_count }}</span>
+                    <span class="description">Posts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <h3>{{ u }}</h3>
+              <p>{{ u.profile.bio }}</p>
+              <hr class="my-2" />
+              {% if not u == request.user %}
+                {% if button_status == 'not_following' %}
+                  <small><a
+                      class="btn btn-primary"
+                      href="{% url 'users:send_follow_request' u.profile.slug %}">Follow</a></small>
+                {% elif button_status == 'follow_request_sent' %}
+                  <small><a
+                      class="btn btn-warning"
+                      href="{% url 'users:cancel_follow_request' u.profile.slug %}">Cancel Follow Request</a></small>
+                {% elif button_status == 'follow_request_received' %}
+                  <small ><a
+                      class="btn btn-success mr-2"
+                      href="{% url 'users:accept_follow_request' u.profile.slug %}">Accept Follow Request</a ></small>
+                  <small><a
+                      class="btn btn-danger"
+                      href="{% url 'users:delete_follow_request' u.profile.slug %}">Reject Request</a></small>
+                {% else %}
+                  <small><a
+                      class="btn btn-danger"
+                      href="{% url 'users:delete_following' u.profile.slug %}">UnFollow</a></small>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+  </div>
+</div>
+
+{% endcomment %}
+
+{% endblock %}

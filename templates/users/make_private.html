@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <br> <br>
+  {% if request.user.profile.is_private %}
+    Your profile is currently Private, Click the button below to make it public
+    <form action="{% url 'users:make_private' %}" method="post">
+      {% csrf_token %}
+      <input id="pvt-rdio" name="action" type="radio" value="make_public" checked hidden>
+      <input type="submit" value="Make Public"/>
+    </form>
+  {% else %}
+    Your profile is currently Public, Click the button below to make it Private
+    <form action="{% url 'users:make_private' %}" method="post">
+      {% csrf_token %}
+      <input id="pvt-rdio" name="action" type="radio" value="make_private" checked hidden>
+      <input type="submit" value="Make Private"/>
+    </form>
+  {% endif %}
+{% endblock %}

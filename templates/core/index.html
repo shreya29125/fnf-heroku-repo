@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}?ver=2">
+  <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="{% static 'js/nav.js' %}"></script>
+  <script src="{% static 'js/home.js' %}"></script>
+  <title>Home</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="body-grid-container">
+    <div class="body-grid-item grid-hotline">
+        <div class='hotline1'>
+            <div><span class="iconify hotline-icons" data-icon="majesticons:message-line" data-inline="true" > </span> <span style="font-size:x-large; "><a href="{% url 'chat:index' %}">Hotline</a></span></div>
+            <div><span style='text-align-last: right;' class="iconify hotline-icons" data-icon="bx:bx-message-add" data-inline="true"></span> </div>
+        </div>
+        <!-- <img style='border-radius: 20px; padding-top: 10px;'src='images/hotline.jpg' height="90px" width="180px"> -->
+        <div class='hotline2'>
+            <div><span style='text-align: left;' class="iconify hotline-icons" data-icon="bx:bx-message-add" data-inline="true"></span></div>
+            <div><span class="iconify hotline-icons" data-icon="bi:people-fill" data-inline="true"></span></div> 
+            <div><span class="iconify hotline-icons" data-icon="clarity:group-solid" data-inline="true"></span></div> 
+        </div>
+    </div>
+    <div class="body-grid-item grid-stories"> 
+        <div class="create_quickie_container">
+            <img class='create_quickie' src='{{ request.user.profile.image.url }}'>
+            <a href="{% url 'stories:add_story' %}"><div class="add_quickie_plus">
+                <span class="iconify icon-bell" data-icon="akar-icons:circle-plus-fill" data-inline="false"></span>
+            </div></a>
+        </div>
+        {% for story in stories %}
+        <button onclick='openStory({{forloop.counter}})'><img class='stories' src='{{ story.user.profile.image.url }}'  ></button>
+    <div id='stories_modal{{forloop.counter}}' class="stories_modal" style="display:none">
+        <span id='close' onclick="closeStoryModal({{forloop.counter}})" class="close">&times;</span>
+        
+        <div class="main_story">
+            
+            <div class="left_arrow" onclick='moveStoryLeft({{forloop.counter}})'>&larr;</div>
+            <div>
+                <div>
+                    <div class="main_story_user_data">
+                        <div style="display: inline-block;"><img class="user" src="{{ story.user.profile.image.url }}"></div><div style="display: inline-block; padding-left: 3%;"> <div style='font-size: large; padding-top: 3%;'>{{story.user}}</div> <div style='color: grey'>{{story.posted}}</div>  </div> 
+                    </div>
+                </div>    
+                <div class="main_story_content" style="width:100%">
+                    <img class='main_story_content' src="{{story.content.url}}" style="width:100%">
+                </div>
+            </div>
+            
+            
+            <div class="right_arrow" onclick='moveStoryRight({{forloop.counter}})'>&rarr;</div>
+            <div class="main_story_other"></div>
+        </div>
+    </div>
+        {% endfor %}
+        {% comment %} <button><img class='stories' src='images/LR2.jpeg'  ></button>
+        <button><img class='stories' src='images/LR1.jpeg'  ></button>
+        <button><img class='stories' src='images/LR4.jpeg'  ></button> {% endcomment %}
+    </div>
+
+    
+
+    <div class="body-grid-item grid-wallet">
+        <img class='placeholder' src='{% static "images/Placeholder.png" %}?ver=2' >
+    </div>
+    <div class="body-grid-item body-item-4" style='background-color: #1f1f1f;'>
+
+        <button style='width: 100%; text-align: left;'><div class='Left-bar-buttons'><p class='Left-text'>Make Your Team</p></div></button>
+        <button style='width: 100%; text-align: left;'><div class='Left-bar-buttons'><p class='Left-text'>Cool Spots Near You</p></div></button>
+        <button style='width: 100%; text-align: left;'><div class='Left-bar-buttons'><p class='Left-text'>Fan Performance</p></div></button>
+        <button style='width: 100%; text-align: left;'><div class='Left-bar-buttons'><p class='Left-text'>Live Now</p></div></button>
+        <button style='width: 100%; text-align: left;'><div class='Left-bar-buttons'><p class='Left-text'>Recommendations</p></div></button>
+        <button style='width: 100%; text-align: left;'><div class='Left-bar-buttons'><p class='Left-text'>Party Hard</p></div></button>
+        <button style='width: 100%; text-align: left;'><div class='Left-bar-buttons'><p class='Left-text'>Events</p></div></button>
+    </div>
+    <div class="body-grid-item body-item-5">
+        <div class='section_mid'>
+            {% for post in posts %}
+            <div class="post-background">
+                <div style="display: inline-block;"><img class="user" src="{{ post.user_posted.profile.image.url }}"></div>
+                <div style="display: inline-block; padding-left: 3%;"> 
+                    <div style='font-size: large; padding-top: 3%;'>{{ post.user_posted }}</div> <div style='color: grey'>{{ post.date_posted }}</div> 
+                </div> 
+                {% if request.user == post.user_posted %}
+                <div class="dropdown" tabindex="-1" style="float:right;position:relative;cursor:pointer;">
+                    <div class="three-dots"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                    </svg></div>
+                    <div class="dropdown-cont" style="position: absolute;top: 15px;right: 1px;padding: 5px;background-color: #000;border: 2px solid black;border-radius: 2px;">
+                        <a href="{% url 'posts:delete_post'%}?post-slug={{post.slug}}&next={{request.path}}" style="color:#fff">Delete Post</a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="post" style='padding-top: 2%;'> 
+                    
+                    {% include 'posts/post_partial.html' with post=post %}
+                    {% comment %} <p class='post'  style='padding-top: 2%;'>Some text..</p>
+                <p class='post'>{{ post.caption }}</p> {% endcomment %}
+                 </div>   
+                 
+                 <div class="even-coloums" style="font-size: 16px">
+                    <button><div class='post-buttons'><img height='30px' width='30px' src="https://img.icons8.com/emoji/48/000000/heart-suit.png"/> <div class="likes">12</div></div></button>
+                    <button onclick="toggleComments()"><div class='post-buttons'><span class="iconify" data-icon="akar-icons:comment" data-inline="false" style="vertical-align: -0.4em;"></span><div class="likes">12</div></div></button>
+                    <button><div class='post-buttons'><span class="iconify" data-icon="flat-color-icons:share" data-inline="false" style="vertical-align: -0.4em;"></span><div class="likes">12</div></div></button>
+                    <button><div class='post-buttons'><span class="iconify" data-icon="noto:coin" data-inline="false" style="vertical-align: -0.4em;"></span><div class="likes">12</div></div></button>
+
+                 </div>
+                 <div>
+                     <div id='post-comments' class='post-comments'>
+                        <!-- This is where user writes a comment -->
+                        <div class='post-single-comment-box'>
+                            <button class='comment-like-container'>
+                                <div class='comment-like'><img height='20px' width='20px' src="https://img.icons8.com/emoji/48/000000/heart-suit.png"/>  
+                                    <div class="likes">2</div>
+                                </div>
+                                <br>
+                            </button>
+                            <div class='post-single-comment'>
+                                <div style="display: inline-block;"><img class="user comment" src="images/person.jpeg"></div>
+                                <div style="display: inline-block; padding-left: 1%;">  </div> 
+                                 <div class='post-single-comment-text'>
+                                    <div class='post-single-comment-text-details'><b>User Name, 3hrs ago<br></div></b>
+                                    
+                                    <form >
+                                        <input class='user-entered-comment' type="text" id="fname" name="fname" placeholder="Speak your mind?.." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Speak your mind?..'">
+                                        <input class='send-com' type="submit" value="Send&#8594">
+                                      </form>
+                                </div>
+                                
+                             </div>
+                             
+                        </div>
+                        
+                        <div class='post-single-comment-box' >
+                            <button class='comment-like-container'>
+                                <div class='comment-like'><img height='20px' width='20px' src="https://img.icons8.com/emoji/48/000000/heart-suit.png"/>  <div class="likes">2</div></div>
+                                <br>
+                            </button>
+                            <div class='post-single-comment'>
+                                <div style="display: inline-block;"><img class="user comment" src="images/person.jpeg"></div><div style="display: inline-block; padding-left: 1%;">  </div> 
+                                 <div class='post-single-comment-text'>
+                                    <div class='post-single-comment-text-details'><b>User Name, 3hrs ago<br></div></b>
+                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laboriosam, debitis!
+                                </div>
+                                
+                             </div>
+                             <button class="comment-reply"><u>Reply</u></button>
+                        </div>
+                        
+
+                        <!--comment reply-->
+
+                        <div class='post-single-comment-box'>
+                            <button class='comment-like-container'>
+                                <div class='comment-like'><img height='20px' width='20px' src="https://img.icons8.com/emoji/48/000000/heart-suit.png"/>  <div class="likes">2</div></div>
+                                <br>
+                            </button>
+                            <div class='post-single-comment reply'>
+                                <div style="display: inline-block;"><img class="user comment" src="images/person.jpeg"></div><div style="display: inline-block; padding-left: 1%;">  </div> 
+                                 <div class='post-single-comment-text'>
+                                    <div class='post-single-comment-text-details'><b>User Name, 3hrs ago<br></div></b>
+                                    
+                                    <form >
+                                        <input class='user-entered-comment' type="text" id="fname" name="fname" placeholder="Speak your mind?.." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Speak your mind?..'">
+                                        <input class='send-com' type="submit" value="Send&#8594">
+                                      </form>
+                                </div>
+                                
+                             </div>
+                             
+                        </div>
+
+                        <div class='post-single-comment-box'>
+                            <button class='comment-like-container'>
+                                <div class='comment-like'><img height='20px' width='20px' src="https://img.icons8.com/emoji/48/000000/heart-suit.png"/> <div class="likes">2</div></div>
+                                <br>
+                            </button>
+                            <div class='post-single-comment reply'>
+                                <div style="display: inline-block;"><img class="user comment" src="images/person.jpeg"></div><div style="display: inline-block; padding-left: 1%;">  </div> 
+                                 <div class='post-single-comment-text'>
+                                    <div class='post-single-comment-text-details'><b>User Name, 3hrs ago<br></div></b>
+                                    This is a reply
+                                </div>
+                             </div>
+                        </div>
+
+                        <div class='post-single-comment-box'>
+                            <button class='comment-like-container'>
+                                <div class='comment-like'><img height='20px' width='20px' src="https://img.icons8.com/emoji/48/000000/heart-suit.png"/> <div class="likes">2</div></div>
+                                <br>
+                            </button>
+                            <div class='post-single-comment'>
+                                <div style="display: inline-block;"><img class="user comment" src="images/person.jpeg"></div><div style="display: inline-block; padding-left: 1%;">  </div> 
+                                 <div class='post-single-comment-text'>
+                                    <div class='post-single-comment-text-details'><b>User Name, 3hrs ago<br></div></b>
+                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vel nesciunt sit expedita quos placeat molestias aspernatur nobis architecto voluptatum. Veritatis.
+                                </div>
+                             </div>
+                        </div>
+                        <button class="comment-reply"><u>Reply</u></button>
+                        <div>
+                            <button class='load-more-comments'>Load more comments</button>
+                        </div>
+
+                        </div>
+                 </div>   
+
+              </div>
+
+              <br>
+              {% endfor %}
+            {% comment %} </div>   
+                 <!-- <div style='display: flex; margin: 10px;'>
+                    <button style='background-color: none;'><div style="position: relative; width:100px; height:50px; top:0px; background:none">
+                        <div style="z-index: 2; position:absolute;" ><img height='40px' width='40px' src="https://img.icons8.com/emoji/48/000000/heart-suit.png"/></div>
+                        <div style="z-index: 1; position:absolute; left:23px;top:5px;" class='playlist-icon'>Like</div>
+                      </div></button>
+              
+                      <button style='background-color: none;'><div style="position: relative; width:140px; height:50px; top:0px; background:none">
+                        <div style="z-index: 2; position:absolute;" ><img height='40px' width='40px' src="https://img.icons8.com/clouds/100/000000/comments.png"/></div>
+                        <div style="z-index: 1; position:absolute; left:23px;top:5px;" class='playlist-icon'>Comment</div>
+                    </div></button>
+                
+                    <button style='background-color: none;'><div style="position: relative; width:120px; height:50px; top:0px; background:none">
+                        <div style="z-index: 2; position:absolute;" ><img height='40px' width='40px' src="https://img.icons8.com/bubbles/50/000000/share.png"/></div>
+                        <div style="z-index: 1; position:absolute; left:23px;top:5px;" class='playlist-icon'>Share</div>
+                    </div></button>
+                    
+                    <button style='background-color: none;'><div style="position: relative; width:100px; height:50px; top:0px; background:none">
+                        <div style="z-index: 2; position:absolute;" ><img height='40px' width='40px' src="https://img.icons8.com/bubbles/50/000000/wallet-app.png"/></div>
+                        <div style="z-index: 1; position:absolute; left:23px;top:5px;" class='playlist-icon'>Reward</div>
+                    </div></button>
+                  </div> -->
+              </div>
+
+              <br> {% endcomment %}
+              
+
+              
+
+              
+        </div>
+    </div>
+    <div class="body-grid-item body-item-6" style='background-color: #1f1f1f; '>
+    <div class="showcase-artist">
+        <p style='font-size: 40px'>Showcase</p>
+        <p style='font-size: large;'>Artist of the week</p>
+        <div style="display: inline-block;"><img class="user" style="border: 2px solid rgb(255, 0, 0);" src="images/Profile_pic.jpg"></div><div style="display: inline-block; padding-left: 3%;">  <div style='font-size: large;color: rgb(136, 136, 136); '>Frank Ocean</div>  </div>
+        <div style='font-size: large; margin-top: 5%; margin-bottom: 5%;'><span class="iconify" style="color: red; vertical-align: -0.4em;" data-icon="ic:twotone-auto-graph" data-inline="false"></span>70K likes this week</div>
+    </div>
+    <div class="showcase-post">
+        <p style='font-size: large;'>Post of the Week</p>
+        <div style="display: inline-block;"><img class="showcase-post-pic" style="border: 2px solid rgb(255, 0, 0);" src="images/person.jpeg"></div><div style="display: inline-block; padding-left: 3%;">  <div style='font-size: large;color: rgb(155, 155, 155);'>Miss Fancy</div>  </div>
+        <img class='post' style='height: 150px; width: 90%; border-radius: 8px; margin: 2% 1% 2% 1%;' src="images/LR4.jpeg">
+        <div style='font-size: large; margin-top: 5%; margin-bottom: 5%;'><span class="iconify" style="color: red; vertical-align: -0.4em;" data-icon="ic:twotone-auto-graph" data-inline="false"></span>11K likes this week</div>
+    </div>
+    <div class="showcase-post">
+        <p style='font-size: large;'>Fan of the week</p>
+        <div style="display: inline-block;"><img class="user" style="border: 2px solid rgb(255, 0, 0);" src="images/Profile.png"></div><div style="display: inline-block; padding-left: 3%;">  <div style='font-size: large;color: rgb(136, 136, 136);'>LuckyUser</div>  </div>
+        <div style='font-size: large; margin-top: 5%; margin-bottom: 5%;'><span class="iconify" style="color: red; vertical-align: -0.4em;" data-icon="ic:twotone-auto-graph" data-inline="false"></span>112K interactions this week</div>
+    </div>
+    </div>
+
+
+    
+
+</div>
+
+{% endblock %}

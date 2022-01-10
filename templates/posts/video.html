@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/video.css' %}">
+<script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+
+{% block body %}
+
+<!---Sidebar Starts-->
+<div class="sidebar">
+
+    <div class="logo_content">
+        <div class="logo">
+          <div class="logo_name"></div>
+        </div>
+        <i class='bx bx-menu' id="btn" ></i>
+      </div>
+
+    <ul class="nav_list" style="list-style-type: none;">
+      <li>
+        <i class='bx bx-search' ></i>
+        <input id="searchbox" type="text" placeholder="Search Videos..">
+      <span class="tooltip">Search</span>
+    </li>
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="clarity:video-gallery-solid"></span>
+                <span class="links_name">Living Room</span>
+            </a>
+            <span class="tooltip">Living Room</span>
+        </li>
+
+
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="ant-design:fire-outlined" data-inline="false"></span>
+                <span class="links_name">What's Hot</span>
+            </a>
+          <span class="tooltip">What's Hot</span>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="icon-park-outline:ulikecam" data-inline="false"></span>
+                <span class="links_name">Your Taste</span>
+            </a>
+            <span class="tooltip">Your Taste</span>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="carbon:categories" data-inline="false"></span>
+                <span class="links_name">Categories</span>
+            </a>
+          <span class="tooltip">Categories</span>
+        </li>
+    </ul>
+
+
+  </div>
+<!--Sidebar Ends-->
+
+    <div class="videocontent">  
+        
+        <div class="vidhome">
+            {% for video in videos %}
+            
+            <div class="vidhomeitem1">
+              <img src="{{ video.thumbnail.url }}" alt="" class="vidhomeimg">
+              <img src="{{ video.user_posted.profile.image.url }}" alt="" class="vidhomeimgdp">
+              <a href="{% url 'posts:videoplayer' video.slug %}"><h3 class="videotitle">{{video.caption}}</h3></a>
+              <h4 class="videouploader">{{video.user_posted}} | {{ video.date_posted }}</h4>
+            </div>
+        
+            {% endfor %}
+        
+    </div>
+
+    <script>
+        let btn = document.querySelector(".bx-menu");
+        let sidebar = document.querySelector(".sidebar");
+        let videocontent = document.querySelector(".videocontent");
+        let searchBtn = document.querySelector(".bx-search");
+      
+        btn.onclick = function() {
+          sidebar.classList.toggle("active");
+          videocontent.classList.toggle("active");
+          if(btn.classList.contains("bx-menu")){
+            btn.classList.replace("bx-menu" , "bx-menu-alt-right");
+          }else{
+            btn.classList.replace("bx-menu-alt-right", "bx-menu");
+          }
+        }
+        searchBtn.onclick = function() {
+          sidebar.classList.toggle("active");
+          videocontent.classList.toggle("active");
+        }
+       </script> 
+{% endblock %}
