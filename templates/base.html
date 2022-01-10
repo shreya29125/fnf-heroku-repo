@@ -1,0 +1,151 @@
+{% load static %}
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block head %}
+    {% endblock %}
+    {% if not ignore_main_css %}
+      <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% endif %}
+    <!-- Adding Ajax Query ref !IMPORTANT -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+  <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script>
+      $(document).ready(function(){
+          // Show hide popover
+          $(".dropdown").click(function(){    
+              $(this).find(".dropdown-cont").slideToggle("fast");
+          });
+      });
+      $(document).on("click", function(event){
+          var $trigger = $(".dropdown");
+          if($trigger !== event.target && !$trigger.has(event.target).length){
+              $(".dropdown-cont").slideUp("fast");
+          }            
+      });
+
+      $(document).ready(function(){
+          // Show hide popover
+          $(".dropdown_left").click(function(){
+              $(this).find(".dropdown-cont_left").slideToggle("fast");
+          });
+      });
+      $(document).on("click", function(event){
+          var $trigger = $(".dropdown_left");
+          if($trigger !== event.target && !$trigger.has(event.target).length){
+              $(".dropdown-cont_left").slideUp("fast");
+              
+          }            
+      });
+</script>
+  </head>
+  <body>
+  <nav style="position: sticky; top: 0; z-index: 1000;">
+    <div class="grid-container">
+      <div class="grid-item item-0">
+          <ul class="nav-item-1">
+              <li><a href="{% url 'core:index' %}"><img class='logo' src="{% static 'images/Logo.png' %}"></a></li>
+          </ul>
+      </div>
+      <div class="grid-item item-1">
+          <ul class="nav-item-1">
+              <!-- <li><img class='logo' src="images/Logo.png"></li> -->
+              <li class="search">
+                <form action="{% url 'users:search_users' %}" style="margin:0">
+                  <input class='nav-search' type="search" id="Nav-search" name="q" placeholder="Search Fan and Fame" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Fan and Fame'">
+                  <a href="#"><span class="iconify icon-search" data-icon="octicon-search" data-inline="false"></span></a>
+                  {% comment %} <button class="btn btn-success my-2 my-sm-0 ml-4" type="submit"><span class="iconify icon-search" data-icon="octicon-search" data-inline="false"></span></button> {% endcomment %}
+                </form>
+              </li>
+            </ul>
+      </div>
+      <div class="grid-item item-2">
+          <ul class="nav-item-2">
+              <li><a href="{% url 'core:index' %}"><span class="iconify icon-bell" data-icon="bx:bx-home" data-inline="false"></span></a></li>
+              <li><a href="{% url 'posts:video' %}"><span class="iconify icon-bell" data-icon="bi:camera-video" data-inline="false" ></span> </a></li>
+              <li><a href="{% url 'posts:music' %}"><span class="iconify icon-bell" data-icon="fluent:music-note-2-16-regular" data-inline="false" data-width="20px" data-height="20px"></span></a></li>
+              <li><a href="{% url 'core:index' %}"><span class="iconify icon-bell" data-icon="bx:bx-radio" data-inline="false" data-width="20px" data-height="20px"></span></a></li>
+              <li><a href="{% url 'can:index_path' %}"><span class="iconify icon-bell" data-icon="fluent:news-20-regular" data-inline="false" data-width="20px" data-height="20px"></span> </a></li>
+            </ul>
+      </div>
+      <div class="grid-item item-3">
+          <ul class="nav-item-3">
+              <!-- This is to just indicate where the create post thing will come. -->
+              <li><a href="{% url 'posts:add_post' %}"><span class="iconify icon-bell" data-icon="akar-icons:circle-plus-fill" data-inline="false"></span></a></li>
+              <li><a href="{% url 'notifications:view' %}"><span class="iconify icon-bell" data-icon="fontisto:bell" data-inline="false"></span></a></li>
+              <span class='nav-profile-data'>
+                {% if request.user.is_authenticated %}
+                  <li><a href="{% url 'users:profile' %}"><img class='logo' src="{{ request.user.profile.image.url }}"></a></li>
+                {% endif %}
+                <span class='nav-profile-data-username'><li><a class="text" href="{% url 'users:profile' %}">{{request.user.profile.first_name}}</a></li></span>
+              </span>
+              
+          </ul>
+      </div>
+      <div class="grid-item item-4">
+          <ul class="nav-item-3">
+              <li class="dropdown">
+                  <a class="dropbtn" href="#"><span class="iconify icon-bell hamburger" data-icon="system-uicons:menu-hamburger" data-inline="false"></span> </a>
+                  <ul class="dropdown-cont">
+                    {% if user.is_authenticated %}
+                      <li><a class="nav-item nav-link" href="{% url 'users:follow_list' %}">Following</a></li>
+                      <li><a class="nav-item nav-link btn btn-danger ml-4 text-light" href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                      <li><a class="nav-item nav-link btn btn-success ml-4 text-light" href="{% url 'users:login' %}">Login</a></li>
+                      <li><a class="nav-item nav-link btn btn-info ml-3 text-light" href="{% url 'users:signup' %}">Register</a></li>
+                    {% endif %}
+                  </ul>
+                </li>
+          </ul>
+  
+      </div>
+      <div class="grid-item item-5">
+        <ul class="nav-item-3">
+          <li class="dropdown_left">
+              <a class="dropbtn" href="#"><span class="iconify icon-bell hamburger" data-icon="system-uicons:menu-hamburger" data-inline="false"></span> </a>
+              <ul class="dropdown-cont_left">
+                  <button onclick='alert("Make your teams coming soon on mobile!")'><li>Make your Teams</li></button>
+                <li class="last"><a href=""> Cool Spots</a></li>
+              </ul>
+            </li>
+      </ul>
+      </div>
+      <!-- <div class="grid-item item-4">
+        item 4
+      </div>
+      <div class="grid-item item-5">
+        item 5
+      </div> -->
+      {% block chat %}
+      {% endblock chat%}
+
+    </div>
+  </nav>
+    
+
+    {% comment 'posts' %}
+        <a class="nav-item nav-link" href="{% url 'post-create' %}">Create Post</a>
+        <a class="nav-item nav-link" href="{% url 'add_story' %}">Add Quickie</a>
+    {% endcomment%}
+    
+    {% block messages %}
+      {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+      {% endif %}
+    {% endblock %}
+
+    {% block body %}
+    {% endblock %}
+  </body>
+</html>

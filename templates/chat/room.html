@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static  %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}?ver=2">
+{% endblock %}
+
+{% block chat %}
+  
+  <div class="item-6">
+          
+    <div class="contacts">
+      
+      <div class="chat-heading">Hotline</div>
+      <div class='hotline-search'>
+        <ul>
+          <li class="search" style="background-color: rgb(75, 75, 75);">
+            <form>
+              <input class='hot-search' type="search" id="Hot-search" name="Hot-search" placeholder="Search Hotline" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Hotline'">
+              <a href="#"><span class="iconify icon-search" data-icon="octicon-search" data-inline="false"></span></a>
+            </form>
+          </li>
+        </ul>
+      </div>
+      
+      <div>
+        {% for user in chat_users %}
+          <a href="{% url 'chat:check_room' user.profile.slug %}">
+            <div class="single-contact">
+              <img class='hotline-contact-pic' src="{{ user.profile.image.url }}"><div class='hotline-contact-name'>{{user.profile.first_name}}</div> 
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+
+      <div>
+        {% for user in follow_users %}
+          <a href="{% url 'chat:check_room' user.slug %}">
+            <div class="single-contact">
+              <img class='hotline-contact-pic' src="{{ user.image.url }}"><div class='hotline-contact-name'>{{user.first_name}}</div> 
+            </div>
+          </a>
+        {% endfor %}
+        
+      </div>
+
+    </div>
+    
+  </div>
+
+  <div class="item-7">
+    
+    <div class="chat-section">
+      <div class="single-contact">
+        <img class='hotline-contact-pic' src="{{ to_user.profile.image.url }}"> <div class='hotline-contact-name'>{{ to_user.profile.first_name}}</div> 
+      </div>
+
+      <div id="chat-log" class="chat-box"></div>
+
+      <div class='hotline-send-message'>
+        <div class='send-box'>
+          <p id="chat-log" cols="100" rows="20"></p><br>
+          <input id="chat-message-input" class='hot-send' type="text" size="100"><br>
+          <input id="chat-message-submit" type="button" value="Send">
+
+          {{ room_name|json_script:"room-name" }}
+          
+        <!-- <form>
+          <input class='hot-send' type="text" id="Hot-send" name="Hot-send" placeholder="Type..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Type...'">
+        </div> -->
+
+          <div>
+            <span class="iconify" style='height: 16px; width: 16px; color: white' data-icon="mdi-send" data-inline="true"></span> 
+          </div>
+        
+        </div>
+
+    </div>
+
+
+  </div>
+
+      <!-- <p id="chat-log" cols="100" rows="20"></p><br>
+      <input id="chat-message-input" type="text" size="100"><br>
+      <input id="chat-message-submit" type="button" value="Send">
+
+      {{ room_name|json_script:"room-name" }} -->
+
+  <script src="{% static 'js/reconnecting-websocket.js' %}"></script>
+
+  <script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    var username = '{{ request.user.username }}'
+
+    var chatSocket = new ReconnectingWebSocket(
+      'ws://' + 
+      window.location.host +
+      '/ws/chat/' + 
+      roomName + '/'
+    );
+
+    chatSocket.onopen = function(e) {
+      fetchMessages();
+    }
+
+    chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      if (data['command'] === 'messages') {
+        if(!(document.getElementById("chat-log").innerHTML==="")) {
+            $("#chat-log").html('');
+        }
+        for (let i=0; i<data['messages'].length; i++) {
+          createMessage(data['messages'][i]);
+        }
+      } else if (data['command'] === 'new_message'){
+        createMessage(data['message']);
+      }
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+      var messageInputDom = document.getElementById('chat-message-input');
+      var message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({
+          'command': 'new_message',
+          'message': message,
+      }));
+      messageInputDom.value = '';
+    };
+
+    function fetchMessages() {
+      chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
+    }
+
+    function createMessage(data) {
+      var author = data['from_user'];
+      var msgListTag = document.createElement('p');
+      var pTag = document.createElement('p');
+      pTag.textContent = data.content;
+      
+      if (author === username) {
+        msgListTag.className = 'user-message';
+        pTag.className = 'user-text'
+      } else {
+        msgListTag.className = 'received-message';
+        pTag.className = 'received-text'
+      }
+      msgListTag.appendChild(pTag);
+      document.querySelector('#chat-log').appendChild(msgListTag);
+    }
+  </script>
+
+{% endblock %}

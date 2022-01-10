@@ -1,0 +1,236 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+    
+    body 
+    {
+      background-color: #202020;
+      width: 100%;
+      font-family: 'lato', sans-serif;
+    }
+    
+    .iconify { 
+      width: 30px; 
+      height: 30px;
+      color: rgb(206, 206, 206);
+      /* padding-right: 10px; */
+    }
+    
+    .sidebar
+    { 
+      position: fixed;
+      top: 40px;
+      left: 0;
+      height: 100%;
+      width: 5%;
+      background-color: #2E2E2E;
+      padding: 6px 15px;
+      border-right: 2px solid red;
+      z-index: 99;
+      transition: all 0.5s ease;
+    }
+    .sidebar.active{
+      width: 20%;
+    }
+    
+    @media (max-width: 1020px){
+      .sidebar{
+        top: 75px;
+      }
+      .nav_list{
+        display: none;
+      }
+      .sidebar.active .nav_list{
+        display: block;
+      }
+      .sidebar.active{
+        width: 50%;
+      }
+      
+    }
+    
+    .sidebar .logo_content .logo{
+      color: #fff;
+      display: flex;
+      height: 50px;
+      width: 100%;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.5s ease;
+    }
+    .sidebar.active .logo_content .logo{
+      opacity: 1;
+      pointer-events: none;
+    }
+    .logo_content .logo i{
+      font-size: 28px;
+      margin-right: 5px;
+    }
+    .logo_content .logo .logo_name{
+      font-size: 20px;
+      font-weight: 400;
+    }
+    .sidebar #btn{
+      position: absolute;
+      color: #fff;
+      top: 6px;
+      left: 50%;
+      font-size: 22px;
+      height: 50px;
+      width: 50px;
+      text-align: center;
+      line-height: 50px;
+      transform: translateX(-50%);
+    }
+    .sidebar.active #btn{
+      left: 90%;
+    }
+    
+    
+    .sidebar ul{
+      margin-top: 20px;
+      padding-left: 5%;
+    }
+    
+    .sidebar ul li{
+      position: relative;
+      height: 50px;
+      width: 100%;
+      line-height: 50px;
+      margin: 20px 5px;
+    
+    }
+    
+    .sidebar ul li .tooltip
+    {
+      position: absolute;
+      top: 0;
+      left: 125px;
+      font-size: large;
+      transform: translate(-50% , -50%);
+      height: 35px;
+      width: 125px;
+      background: #FFF;
+      line-height: 35px;
+      text-align: center;
+      border-radius: 6px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+      transition: 0s;
+      opacity: 0;
+      pointer-events: none;
+      display: block;
+    }
+    
+    
+    
+    
+    .sidebar.active ul li .tooltip{
+      display: none;
+    }
+    
+    .sidebar ul li:hover .tooltip
+    {
+      transition: all 0.5s ease;
+      opacity: 1;
+      top: 50%;
+    }
+    
+    .sidebar ul li a{
+      color: #FFFFFF;
+      font-size: x-large;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.4s ease;
+    }
+    
+    .sidebar ul li a:hover{
+      background-color: #aa0000;
+      border-radius: 10px;
+      padding-left: 10px
+    }
+    
+    .sideicon
+    {
+      height: 50px;
+      min-width: 40px;
+      line-height: 50px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    
+    .sidebar ul li input{
+      position: absolute;
+      height: 90%;
+      width: 90%;
+      left: 0;
+      top: 0;
+      border-radius: 12px;
+      outline: none;
+      border: none;
+      border-style: solid;
+      border-width: 3px;
+      opacity: 0;
+      border-color: rgb(0, 0, 0);
+      background: #504f4f;
+      
+      font-size: 18px;
+      color: #fff;
+    }
+    
+    .sidebar.active #searchbox
+    {
+      opacity: 1;
+      padding-left: 50px;
+    }
+    .sidebar ul li .bx-search{
+      position: absolute;
+      z-index: 99;
+      color: #fff;
+      font-size: 22px;
+      transition: all 0.5 ease;
+      height: 40px;
+      min-width: 40px;
+      line-height: 45px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    
+    .links_name
+    {
+      padding-left: 10%;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    
+    .sidebar.active .links_name{
+      transition: 0s;
+      opacity: 1;
+      pointer-events: auto
+    }
+    
+    .searchicon
+    {
+      position: absolute;
+      z-index: 10;
+      color: #FFFFFF;
+      height: 45px;
+      min-width: 35px;
+      line-height: 45px;
+      border-radius: 12px;
+      margin-left: 2%;
+      text-align: center;
+    }
+    
+    .sidebar ul li .searchicon:hover{
+      background: #fff;
+      color: #1d1b31;
+    }
+    
+    
+    

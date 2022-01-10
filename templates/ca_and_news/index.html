@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% comment %} <style>
+    article {
+        border: 1px solid black;
+        width: 500px;
+        margin: 20px;
+    }
+    img {
+        width: 300px;
+    }
+</style> {% endcomment %}
+<script src="{% static 'js/Curraff.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/Curraff.css' %}">
+<title>News</title>
+{% endblock %}
+
+{% block body %}
+<!--Sidebar starts here-->
+<div id='sidebar' class="sidebar">
+
+    <div class="logo_content">
+        <div class="logo">
+          <div class="logo_name"></div>
+        </div>
+        <i class='bx bx-menu' id="btn" ></i>
+      </div>
+    <!--
+    <div class="logo_content">
+        <span class="iconify bx bx-menu" id="btn" data-icon="eva:arrow-ios-forward-outline" data-inline="false"></span>
+      </div>
+    -->
+    <ul class="nav_list" style="list-style-type: none;">
+      <!--
+        <li>
+                <span class="iconify searchicon" data-icon="clarity:search-line"></span>
+                <input type="text" placeholder="Search...">
+            <span class="tooltip">Search</span>
+        </li>
+      -->
+      <li>
+        <i class='bx bx-search' ></i>
+        <input id="searchbox" type="text" placeholder="Search Videos..">
+      <span class="tooltip">Search</span>
+    </li>
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="clarity:video-gallery-solid"></span>
+                <span class="links_name">Living Room</span>
+            </a>
+            <span class="tooltip">Living Room</span>
+        </li>
+
+
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="ant-design:fire-outlined" data-inline="false"></span>
+                <span class="links_name">What's Hot</span>
+            </a>
+           <span class="tooltip">What's Hot</span>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="icon-park-outline:ulikecam" data-inline="false"></span>
+                <span class="links_name">Your Taste</span>
+            </a>
+            <span class="tooltip">Your Taste</span>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="iconify sideicon" data-icon="carbon:categories" data-inline="false"></span>
+                <span class="links_name">Categories</span>
+            </a>
+           <span class="tooltip">Categories</span>
+        </li>
+    </ul>
+
+
+</div>
+
+<!--Sidebar ends here-->
+
+<div class="content">
+    <ul class='carousel multiple-items'>
+        {% if blogs %}
+        {% for blog in blogs %} 
+        <li class="slides">
+            <a href="{% url 'can:read_path' id_b=blog.id %}" onclick="openNewStory()">
+            {% comment %} <button id = 'open' onclick="openNewsStory()">
+                <img src="{{ blog.thumb.url }}" alt="{{ blog.title }}">
+            </button> {% endcomment %}
+            <img src="{{ blog.thumb.url }}" alt="{{ blog.title }}">
+            <header>
+                <h3>{{ blog.body }}</h3>
+                {% comment %} <h4>by {{ blog.author.username }}</h4> {% endcomment %}
+            </header>
+            </a>
+        </li>
+        {% endfor %}
+        {% endif %}
+    </ul>
+    <div class='heading'>
+      <div>
+          <button id="left-button-whats-hap">
+            &larr;Prev
+          </button>
+      </div>
+      <h2>What's Happening</h2>
+      <div>
+          <button id="right-button-whats-hap">
+            Next&rarr;
+          </button>
+      </div>
+    </div>
+
+  <!-- slider script whats happening -->
+  <script>
+    $('#right-button-whats-hap').click(function() {
+    event.preventDefault();
+    $('#content-whats-hap').animate({
+        scrollLeft: "+=600px"
+    }, "slow");
+    });
+
+    $('#left-button-whats-hap').click(function() {
+    event.preventDefault();
+    $('#content-whats-hap').animate({
+        scrollLeft: "-=600px"
+    }, "slow");
+    });
+</script>
+
+    <div class="center main" id="content-whats-hap">
+      <ul class="feature">
+        {% for blog in blogs %}
+        <li class="internal">
+          <a href="{% url 'can:read_path' id_b=blog.id %}" onclick="openNewStory()">
+            <img src="{{ blog.thumb.url }}" alt="{{ blog.title }}">
+            <header>
+                <h3>{{ blog.title }}</h3>
+            </header>
+            </a>
+        </li>
+      {% endfor %}
+       
+      </ul>    
+  </div>
+
+      <br>
+
+      <div class='heading'>
+        <div>
+            <button id="left-button-rec">
+              &larr;Prev
+            </button>
+        </div>
+        <h2>Your Blogs</h2>
+        <div>
+            <button id="right-button-rec">
+              Next&rarr;
+            </button>
+        </div>
+      </div> 
+      <!-- slider script recommendations -->
+      <script>
+        $('#right-button-rec').click(function() {
+        event.preventDefault();
+        $('#content-rec').animate({
+            scrollLeft: "+=600px"
+        }, "slow");
+        });
+
+        $('#left-button-rec').click(function() {
+        event.preventDefault();
+        $('#content-rec').animate({
+            scrollLeft: "-=600px"
+        }, "slow");
+        });
+      </script>
+      
+      <div class="center main" id="content-rec">
+        <ul class="feature">
+          <li class="internal">
+            <a href="{% url 'can:create_path' %}" onclick="openNewStory()">
+              {% comment %} <button id = 'open' onclick="openNewsStory()">
+                  <img src="{{ blog.thumb.url }}" alt="{{ blog.title }}">
+              </button> {% endcomment %}
+              <img src="{{ request.user.profile.image.url }}" alt="{{ request.user }}">
+              <header>
+                  <h3>Create New Blog</h3>
+                  {% comment %} <h4>by {{ blog.author.username }}</h4> {% endcomment %}
+              </header>
+              </a>
+          </li>
+          {% for blog in blogs %}
+          {% if blog.author == request.user %}
+          <li class="internal">
+            <a href="{% url 'can:read_path' id_b=blog.id %}" onclick="openNewStory()">
+              {% comment %} <button id = 'open' onclick="openNewsStory()">
+                  <img src="{{ blog.thumb.url }}" alt="{{ blog.title }}">
+              </button> {% endcomment %}
+              <img src="{{ blog.thumb.url }}" alt="{{ blog.title }}">
+              <header>
+                  <h3>{{ blog.title }}</h3>
+                  {% comment %} <h4>by {{ blog.author.username }}</h4> {% endcomment %}
+              </header>
+              </a>
+          </li>
+          {% endif %}
+        {% endfor %}
+        </ul>    
+    </div>
+  </div>
+</div>
+
+<!--Sidebar js-->
+<script>
+  // var navheight = document.querySelector('#navcontainer').offsetHeight
+  // document.getElementById("sidebar").offsetTop = navheight;
+  // document.querySelector('#sidebar').offsetTop = navheight;
+  let btn = document.querySelector(".bx-menu");
+  let sidebar = document.querySelector(".sidebar");
+  let searchBtn = document.querySelector(".bx-search");
+
+  btn.onclick = function() {
+    sidebar.classList.toggle("active");
+    if(btn.classList.contains("bx-menu")){
+      btn.classList.replace("bx-menu" , "bx-menu-alt-right");
+    }else{
+      btn.classList.replace("bx-menu-alt-right", "bx-menu");
+    }
+  }
+  searchBtn.onclick = function() {
+    sidebar.classList.toggle("active");
+  }
+ </script>  
+ 
+<!--Carousel js-->      
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script>  
+$(function() {
+  $('.multiple-items').slick({
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    arrows: false,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    centerMode: true,
+    centerPadding: '0',
+  })  
+});
+
+</script>
+
+{% endblock %}

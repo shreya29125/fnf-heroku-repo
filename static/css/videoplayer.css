@@ -1,0 +1,288 @@
+body 
+{
+  background-color: #141414;
+  width: 100%;
+  font-family: 'lato', sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color:rgb(0, 0, 0);
+}
+.videoplayback
+{
+    width: 95%;
+    margin-left:5%;
+    margin-top: 0.5%;
+    transition: all 0.5s ease;
+
+}
+.videoplayback.active
+{
+    width:84%;
+    margin-left: 16%;
+}
+
+.vidlines
+{
+    margin-top: 1%;
+    margin-bottom: 1%;
+    border: 0.05px solid rgb(61, 61, 61);
+
+}
+
+.vidcontain
+{
+    display: grid;
+    width: 100%;
+
+    grid-template-areas: 'player player player player reccomend reccomend';
+    padding-left: 1%;
+    padding-right: 1%;
+    grid-row-gap: 3vw;
+    grid-column-gap: 1vw;
+}
+
+.videoplayer
+{
+    width: 100%;
+    grid-area: player;
+
+}
+
+.videoid
+{
+    width: 100%;
+    height: 30vw;
+    background-color: black;
+}
+
+.vidrec
+{
+    grid-area: reccomend;
+
+    /* background-color: #7a7878; */
+    background-color: #141414;
+    right: 0%;
+}
+
+.vidinfo
+{
+    width: 100%;
+}
+
+.videotitle
+{
+    font-family: 'Calibri', sans-serif;
+    font-style: normal;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-width: 100%;
+    text-decoration: none;
+    max-height: 6vw;
+    color: white;
+    text-align: left;
+    font-size: 1.5em;
+}
+
+.vidupload
+{
+    margin-top: 1%;
+    font-family: 'Calibri', sans-serif;
+    font-style: normal; 
+    text-decoration: none;
+    color: #525252;
+    text-align: left;
+    font-size: 1.0em;
+}
+
+.followcontain
+{
+    display: flex;
+    width: 100%;
+}
+
+.viduploader{
+    width: 18%;
+    margin-top: 1%;
+    margin-right: 0%;
+    color: #FFFFFF;
+    font-family: 'Calibri', sans-serif;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.viduploaderdp
+{
+    display: inline;
+    height: 2.5vw;
+    width: 2.5vw;
+    object-fit: cover;
+    margin-top: 1%;
+    border-radius: 100%;
+}
+
+.viduploadername
+{
+    margin-left: 4%;
+
+}
+
+.followuploader
+{
+    width: 10%;
+    margin-top: 1%;
+    height: 5vh;
+    min-height: 30px;
+    color: #FFFFFF;
+    font-family: 'Calibri', sans-serif;
+    font-size: 1.2em;
+    background-color: red;
+    border-radius: 10px;
+    text-align: center;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(0, 0, 0);
+}
+
+.videooptions
+{
+    display: grid;
+    grid-template-areas: 'auto auto auto auto';
+    margin-left: 3%;
+    width: 70%;
+    height: 5vh;
+    margin-top: 1%;
+    padding-left: 1%;
+    padding-right: 1%;
+    grid-column-gap: 1vw;
+}
+
+
+.videooptions > div
+{
+    position: relative;
+    background-color: #2E2E2E;
+    border-style: solid;
+    min-width: 100px;
+    border-width: 1px;
+    border-color: rgb(247, 0, 0);
+    border-radius: 5px;
+}
+
+.viddescription
+{
+    width: 100%;
+}
+
+.viddescription{
+
+    color: #bebebe;
+    font-family: 'Calibri', sans-serif;
+    font-size: 1.1em;
+    display: -webkit-box;
+    overflow: hidden;
+
+}
+
+.loadcomments
+{
+    width: 100%;
+    height: 5vh;
+    background-color: #2E2E2E;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(247, 0, 0);
+    border-radius: 5px;
+}
+
+.commentbutton
+{
+    color: #FFFFFF;
+    text-align: center;
+    font-family: 'Calibri', sans-serif;
+    font-style: normal;
+    font-size: 1.5em;
+}
+
+.addcomm
+{
+    width: 100%;
+    display: grid;
+    grid-template-areas: 'dp comm';
+    
+}
+
+/* .rec_vid
+{
+    width: 100%;
+    height: 15vh;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(247, 0, 0);
+    padding: 10px;
+} */
+
+.feature img{
+    width: 15vw;
+    height: 10vw;
+    margin: 0 auto;
+}
+.feature li{ 
+    margin: 1vw;
+    width: 15vw;
+    height: 15vw;
+    background-color: #3f3f3f;
+
+}
+
+.internal{
+    width: 18.75%;  
+    margin-right: 4%;
+    display: block;
+    /* text-align: center;  */
+    /* border-style: solid;
+    border-width: 1px;
+    border-color: rgb(247, 0, 0); */
+}
+
+.vidrec .title{
+    padding: 10px;
+    margin: 10px;
+    color: white;
+}
+
+.feature .viduploaderdp{
+    height: 2.5vw;
+    width: 2.5vw;
+    object-fit: cover;
+    margin-top: 1%;
+    border-radius: 100%;
+    border: 2px solid #00ffb3;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: black;
+  
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #6c757d;
+    border-radius: 100px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: white;
+  }

@@ -1,0 +1,51 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/Curraff.css' %}">
+{% endblock %}
+
+{% block body %}
+    <article id='news_modal' class="newsmodal">
+        <div class="newsmodal-content">
+            <div style='padding: 5px;'>
+                <h3>{{ blog.title }}</h3>  
+                <h5>{{ blog.author.username }}</h5>  
+            </div>
+            {% if blog.thumb %}
+                <div class='newsmodalimg'>
+                    <img class='newsmodalimg' src="{{ blog.thumb.url }}">
+                </div>
+            {% endif %}
+            <main class="news">
+                {{ blog.body }}
+            </main>
+        </div>
+        {% comment %} <header>
+            <h2>{{ blog.title }}</h2>
+            <h3>by {{ blog.author.username }}</h3>
+            <ul>
+                <li><a href="{% url 'can:upvote_path' id_b=blog.id %}">Upvote</a><br>{{ blog.likes.count }}</li>
+                <li><a href="{% url 'can:downvote_path' id_b=blog.id %}">Downvote</a><br>{{ blog.dislikes.count }}</li>
+            </ul>
+        </header>
+        {% if request.user == blog.author %}
+            <nav>
+                <ul>
+                    <a href="{% url 'can:update_path' id_b=blog.id %}"><li>Edit</li></a>
+                    <a href="{% url 'can:delete_path' id_b=blog.id %}"><li>Delete</li></a>
+                </ul>
+            </nav>
+        {% endif %}
+        {% if blog.thumb %}
+            <figure>
+                <img src="{{ blog.thumb.url }}">
+            </figure>
+        {% endif %}
+        <main>
+            <p>{{ blog.body }}</p>
+        </main> {% endcomment %}
+    </article>
+{% endblock %}
